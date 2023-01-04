@@ -60,6 +60,6 @@ class AuthController extends Controller
     public function logout(Request $req)
     {
         auth()->user()->tokens()->delete();
-        return responseMsg(true, "Deleted Successfully", "");
+        return responseMsg(true, "You have Logged Out!!", "");
     }
 }
