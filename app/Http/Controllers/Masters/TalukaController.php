@@ -29,7 +29,6 @@ class TalukaController extends Controller
                 'string',
                 Rule::unique('taluka_mstrs')
                     ->where('district_id', $req->districtId)
-                    ->where('state_id', $req->stateId)
                     ->where('status', 1)
             ]
         ]);
@@ -60,7 +59,6 @@ class TalukaController extends Controller
                     'string',
                     Rule::unique('taluka_mstrs')
                         ->where('district_id', $req->districtId)
-                        ->where('state_id', $req->stateId)
                         ->where('status', 1)
                         ->ignore($req->id)
                 ],

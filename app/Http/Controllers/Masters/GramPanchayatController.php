@@ -30,8 +30,6 @@ class GramPanchayatController extends Controller
                 'required',
                 'string',
                 Rule::unique('gram_panchayat_mstrs')
-                    ->where('district_id', $req->districtId)
-                    ->where('state_id', $req->stateId)
                     ->where('taluka_id', $req->talukaId)
                     ->where('status', 1)
             ]
@@ -65,8 +63,6 @@ class GramPanchayatController extends Controller
                 'required',
                 'string',
                 Rule::unique('gram_panchayat_mstrs')
-                    ->where('district_id', $req->districtId)
-                    ->where('state_id', $req->stateId)
                     ->where('taluka_id', $req->talukaId)
                     ->where('status', 1)
                     ->ignore($req->id)
