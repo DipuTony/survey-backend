@@ -4,6 +4,7 @@ namespace App\Models\Masters;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class TalukaMstr extends Model
 {
@@ -41,11 +42,28 @@ class TalukaMstr extends Model
     }
 
     /**
+     * | Meta Taluka Lists
+     */
+    public function metaLists()
+    {
+        return  DB::table('taluka_mstrs')
+            ->select(
+                'taluka_mstrs.*',
+                's.state_name',
+                'd.name as district_name'
+            )
+            ->leftJoin('state_mstrs as s', 's.id', '=', 'taluka_mstrs.state_id')
+            ->leftJoin('district_mstrs as d', 'd.id', '=', 'taluka_mstrs.district_id');
+    }
+
+    /**
      * | Show by id
      */
     public function show($id)
     {
-        return TalukaMstr::find($id);
+        return $this->metaLists()
+            ->where('taluka_mstrs.id', $id)
+            ->first();
     }
 
     /**
@@ -53,7 +71,8 @@ class TalukaMstr extends Model
      */
     public function retrieveAll()
     {
-        return TalukaMstr::orderByDesc('id')
+        return $this->metaLists()
+            ->orderByDesc('taluka_mstrs.id')
             ->get();
     }
 }
