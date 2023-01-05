@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::controller(TalukaController::class)->group(function () {
         Route::post('masters/taluka/v1/store', 'store');    // Add New Taluka
         Route::post('masters/taluka/v1/edit', 'edit');  // Edit Taluka
+        Route::post('masters/taluka/v1/get-by-id', 'show');  // Retrieve Taluka by id
         Route::post('masters/taluka/v1/get-all', 'retrieveAll'); // Get All Taluka List
-        Route::post('masters/taluka/v1/get-by-id', 'retrieveById');  // Retrieve Taluka by id
     });
 });

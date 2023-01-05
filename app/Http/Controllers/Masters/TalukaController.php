@@ -11,6 +11,11 @@ use Illuminate\Validation\Rule;
 
 class TalukaController extends Controller
 {
+    protected $_modelObj;
+    public function __construct()
+    {
+        $this->_modelObj = new TalukaMstr();
+    }
     /**
      * | Store Taluka in DB
      */
@@ -47,7 +52,46 @@ class TalukaController extends Controller
     public function edit(Request $req)
     {
         try {
-            dd($req->all);
+            $validator = Validator::make($req->all(), [
+                'stateId' => 'required|integer',
+                'districtId' => 'required|integer',
+                'taluka_name' => [
+                    'required',
+                    'string',
+                    Rule::unique('taluka_mstrs')
+                        ->where('district_id', $req->districtId)
+                        ->where('state_id', $req->stateId)
+                        ->where('status', 1)
+                        ->ignore($req->id)
+                ],
+                'status' => 'required|bool',
+            ]);
+            if ($validator->fails()) {
+                return responseMsg(false, $validator->errors(), "");
+            }
+            $mTalukaMstr = new TalukaMstr();
+            $mTalukaMstr->edit($req);
+            return responseMsg(true, "Successfully Updated the Taluka", "");
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
+    }
+
+    /**
+     * | Get Taluka By id
+     */
+    public function show(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'id' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
+        try {
+            $mTalukaMstr = $this->_modelObj;
+            $taluka = $mTalukaMstr->show($req->id);
+            return responseMsg(true, "Taluka Details", remove_null($taluka));
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
         }
@@ -59,6 +103,9 @@ class TalukaController extends Controller
     public function retrieveAll()
     {
         try {
+            $mTalukaMstr = $this->_modelObj;
+            $talukas = $mTalukaMstr->retrieveAll();
+            return responseMsg(true, "All Talukas", remove_null($talukas));
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
         }

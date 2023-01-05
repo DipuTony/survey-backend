@@ -27,4 +27,33 @@ class TalukaMstr extends Model
         $metaReqs = $this->metaReqs($req);
         TalukaMstr::create($metaReqs);
     }
+
+    /**
+     * | Edit Taluka
+     */
+    public function edit($req)
+    {
+        $metaReqs = $this->metaReqs($req);
+        $statusReq = ['status' => $req->status];    // Adding Extras Requests
+        $metaReqs = array_merge($metaReqs, $statusReq);
+        $taluka = TalukaMstr::find($req->id);
+        $taluka->update($metaReqs);
+    }
+
+    /**
+     * | Show by id
+     */
+    public function show($id)
+    {
+        return TalukaMstr::find($id);
+    }
+
+    /**
+     * | Get All Taluka list
+     */
+    public function retrieveAll()
+    {
+        return TalukaMstr::orderByDesc('id')
+            ->get();
+    }
 }
