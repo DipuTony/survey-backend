@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('can:isAdmin')->group(function () {
         // District
         Route::controller(DistrictController::class)->group(function () {
-            Route::post('masters/district/v1/store', 'store');      // Store
+            Route::post('masters/states/v1/get-all', 'retriveStates');   // Get All States
             Route::post('masters/district/v1/get-all', 'retriveAll'); // Retrieve All
         });
 
