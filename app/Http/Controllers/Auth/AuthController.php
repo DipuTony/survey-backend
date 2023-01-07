@@ -49,9 +49,19 @@ class AuthController extends Controller
                 $user = Auth::user();
                 $success['token'] = $user->createToken('MyApp')->plainTextToken;
                 $success['name'] = $user->name;
-                return responseMsg(true, $success['token'], "");
+                return response()->json(
+                    [
+                        'status' => true,
+                        'bearer' => $success['token'],
+                        'isAdmin' => $user->is_admin
+                    ]
+                );
             }
-            return responseMsg(false, "Mobile or Password Incorrect", "");
+            return responseMsg(
+                false,
+                "Mobile or Password Incorrect",
+                ""
+            );
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
         }
