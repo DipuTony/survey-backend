@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Masters\DistrictController;
 use App\Http\Controllers\Masters\GramPanchayatController;
 use App\Http\Controllers\Masters\TalukaController;
 use App\Http\Controllers\Masters\VillageController;
@@ -31,6 +32,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Admin Authorized Routes here
     Route::middleware('can:isAdmin')->group(function () {
+        // District
+        Route::controller(DistrictController::class)->group(function () {
+            Route::post('masters/district/v1/store', 'store');      // Store
+            Route::post('masters/district/v1/get-all', 'retriveAll'); // Retrieve All
+        });
+
         // Taluka
         Route::controller(TalukaController::class)->group(function () {
             Route::post('masters/taluka/v1/store', 'store');
