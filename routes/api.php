@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('auth/logout', 'logout');
     });
 
-    // Admin Authorized Routes here
+    // Admin Authorized Routes here 
     Route::middleware('can:isAdmin')->group(function () {
         // District
         Route::controller(DistrictController::class)->group(function () {
