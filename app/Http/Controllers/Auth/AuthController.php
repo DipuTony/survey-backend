@@ -38,6 +38,7 @@ class AuthController extends Controller
         }
     }
 
+    // V2
     public function login(Request $req)
     {
         $req->validate([
