@@ -5,6 +5,7 @@ use App\Http\Controllers\Masters\DistrictController;
 use App\Http\Controllers\Masters\GramPanchayatController;
 use App\Http\Controllers\Masters\TalukaController;
 use App\Http\Controllers\Masters\VillageController;
+use App\Http\Controllers\Survey\SurveyController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -61,5 +62,10 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('masters/village/v1/show', 'show');             // show Village
             Route::post('masters/village/v1/retrieve', 'retrieve');     // Retrieve Village
         });
+    });
+
+    // Start Survey 
+    Route::controller(SurveyController::class)->group(function () {
+        Route::post('survey/v1/store', 'store');    // Add Survey Record
     });
 });
