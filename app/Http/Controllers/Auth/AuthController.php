@@ -56,7 +56,8 @@ class AuthController extends Controller
                 Rule::unique('users')
                     ->ignore($req->id)
             ],
-            "gramPanchayatId" => "nullable|integer"
+            "gramPanchayatId" => "nullable|integer",
+            "status" => "required|boolean"
         ]);
 
         if ($validator->fails()) {
@@ -67,6 +68,7 @@ class AuthController extends Controller
             $user->name = $req->name;
             $user->email = $req->email;
             $user->mobile = $req->mobile;
+            $user->status = $req->status;
             if ($req->gramPanchayatId) {
                 $user->gram_panchayat_id = $req->gramPanchayatId;
             }
@@ -90,6 +92,13 @@ class AuthController extends Controller
         try {
             if (Auth::attempt(['mobile' => $req->mobile, 'password' => $req->password])) {
                 $user = Auth::user();
+                if ($user->status == 0) {
+                    return responseMsg(
+                        true,
+                        "You Are not Allowed to Logged in",
+                        ""
+                    );
+                }
                 $success['token'] = $user->createToken('MyApp')->plainTextToken;
                 $success['name'] = $user->name;
                 return response()->json(
@@ -146,6 +155,40 @@ class AuthController extends Controller
             $user = new User();
             $dtls = $user->employeeDtls($req->id);
             return responseMsg(true, "Employee Lists", remove_null($dtls));
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
+    }
+
+    /**
+     * | Change password
+     */
+    public function changePassword(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "mobile" => "required|numeric|digits:10",
+            "oldPassword" => "required",
+            "newPassword" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
+
+        // Logics
+        try {
+            $user = User::where('mobile', $req->mobile)
+                ->first();
+            if (Hash::check($req->oldPassword, $user->password)) {
+                $user->password = Hash::make($req->newPassword);
+                $user->save();
+                return responseMsg(true, "Password Changed Successfully", "");
+            }
+            return responseMsg(
+                false,
+                "Mobile or Old Password Incorrect",
+                ""
+            );
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
         }

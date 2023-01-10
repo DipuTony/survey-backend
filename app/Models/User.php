@@ -58,7 +58,9 @@ class User extends Authenticatable
                 'u.email',
                 'u.mobile',
                 'u.gram_panchayat_id',
-                'g.gram_panchayat_name'
+                'g.gram_panchayat_name',
+                'u.created_at',
+                'u.status'
             )
             ->leftJoin('gram_panchayat_mstrs as g', 'g.id', '=', 'u.gram_panchayat_id');
     }

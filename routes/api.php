@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Masters\DistrictController;
 use App\Http\Controllers\Masters\GramPanchayatController;
+use App\Http\Controllers\Masters\QuestionController;
 use App\Http\Controllers\Masters\TalukaController;
 use App\Http\Controllers\Masters\VillageController;
 use App\Http\Controllers\Survey\SurveyController;
@@ -32,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('auth/v1/edit', 'edit');                            // Edit Employee Details
         });
         Route::post('auth/logout', 'logout');
+        Route::post('auth/v1/change-password', 'changePassword');               // Change Password
     });
 
     // Admin Authorized Routes here 
@@ -71,6 +73,11 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('masters/village/v1/retrieve', 'retrieve');     // Retrieve Village
             Route::post('masters/village/v1/get-by-panchayat', 'getByPanchayat');    // Get Village by Panchayat id
         });
+    });
+
+    // Questions
+    Route::controller(QuestionController::class)->group(function () {
+        Route::post('questions/v1/get-all-questions', 'getAllQuestions');
     });
 
     // Start Survey 
