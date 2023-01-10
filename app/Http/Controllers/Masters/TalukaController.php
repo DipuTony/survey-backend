@@ -108,4 +108,25 @@ class TalukaController extends Controller
             return responseMsg(false, $e->getMessage(), "");
         }
     }
+
+    /**
+     * | Get Taluka List by District Id
+     */
+    public function getTalukaByDistrict(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'districtId' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
+        try {
+            $taluka = $this->_modelObj;
+            $taluka = $taluka->getTalukaByDistrict($req->districtId);
+            return responseMsg(true, "", remove_null($taluka));
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
+    }
 }

@@ -82,4 +82,14 @@ class GramPanchayatMstr extends Model
             ->orderByDesc('gram_panchayat_mstrs.id')
             ->get();
     }
+
+    /**
+     * | Get Gram Panchayat by Taluka id
+     */
+    public function getByTaluka($talukaId)
+    {
+        return GramPanchayatMstr::where('taluka_id', $talukaId)
+            ->orderByDesc('id')
+            ->get();
+    }
 }

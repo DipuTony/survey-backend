@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -18,8 +19,7 @@ class AuthController extends Controller
             "name" => "required",
             "email" => "required|unique:users,email",
             "mobile" => "required|unique:users,mobile|numeric|digits:10",
-            "password" => "required",
-            "gramPanchayatId" => "required|integer"
+            "password" => "required"
         ]);
 
         if ($validator->fails()) {
@@ -31,11 +31,52 @@ class AuthController extends Controller
             $user->email = $req->email;
             $user->mobile = $req->mobile;
             $user->password = Hash::make($req->password);
-            $user->gram_panchayat_id = $req->gramPanchayatId;
             $user->save();
             return responseMsg(true, "User Successfully Registered", "");
         } catch (Exception $e) {
             return $e->getMessage();
+        }
+    }
+
+    /**
+     * | Edit Employees
+     */
+    public function edit(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "id" => "required|integer",
+            "name" => "required",
+            "email" => [
+                "required", "email",
+                Rule::unique('users')
+                    ->ignore($req->id)
+            ],
+            "mobile" => [
+                "required", "numeric", "digits:10",
+                Rule::unique('users')
+                    ->ignore($req->id)
+            ],
+            "gramPanchayatId" => "nullable|integer"
+        ]);
+
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
+        try {
+            $user = User::find($req->id);
+            $user->name = $req->name;
+            $user->email = $req->email;
+            $user->mobile = $req->mobile;
+            if ($req->gramPanchayatId) {
+                $user->gram_panchayat_id = $req->gramPanchayatId;
+            }
+            if ($req->password) {
+                $user->password = Hash::make($req->password);
+            }
+            $user->save();
+            return responseMsg(true, "User Successfully Updated", "");
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
         }
     }
 
@@ -73,5 +114,40 @@ class AuthController extends Controller
     {
         auth()->user()->tokens()->delete();
         return responseMsg(true, "You have Logged Out!!", "");
+    }
+
+    /**
+     * | Get all employee lists
+     */
+    public function getAllEmployees()
+    {
+        try {
+            $user = new User();
+            $employeeList = $user->getAllEmployees();
+            return responseMsg(true, "Employee Lists", remove_null($employeeList->toArray()));
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
+    }
+
+    /**
+     * | Employee Dtls
+     */
+    public function employeeDtls(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "id" => "required|integer"
+        ]);
+
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
+        try {
+            $user = new User();
+            $dtls = $user->employeeDtls($req->id);
+            return responseMsg(true, "Employee Lists", remove_null($dtls));
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
     }
 }

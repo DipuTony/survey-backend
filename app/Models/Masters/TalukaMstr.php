@@ -75,4 +75,14 @@ class TalukaMstr extends Model
             ->orderByDesc('taluka_mstrs.id')
             ->get();
     }
+
+    /**
+     * | Get Taluka by district id
+     */
+    public function getTalukaByDistrict($districtId)
+    {
+        return TalukaMstr::where('district_id', $districtId)
+            ->where('status', 1)
+            ->get();
+    }
 }

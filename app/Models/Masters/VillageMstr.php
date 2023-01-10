@@ -87,4 +87,13 @@ class VillageMstr extends Model
             ->orderByDesc('id')
             ->get();
     }
+
+    /**
+     * | Get Village by panchayat id
+     */
+    public function getByPanchayatId($panchayatId)
+    {
+        return VillageMstr::where('gram_panchayat_id', $panchayatId)
+            ->get();
+    }
 }

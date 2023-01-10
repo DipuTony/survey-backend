@@ -114,4 +114,27 @@ class VillageController extends Controller
             return responseMsg(false, $e->getMessage(), "");
         }
     }
+
+    /**
+     * | Get Villages by Panchayat id
+     */
+    public function getByPanchayat(Request $req)
+    {
+        // Validation
+        $validator = Validator::make($req->all(), [
+            'panchayatId' => 'required|integer',
+        ]);
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
+
+        // Logics
+        try {
+            $village = $this->_modelObj;
+            $villages = $village->getByPanchayatId($req->panchayatId);
+            return responseMsg(true, "Villages", remove_null($villages->toArray()));
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
+    }
 }

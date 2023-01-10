@@ -115,4 +115,27 @@ class GramPanchayatController extends Controller
             return responseMsg(false, $e->getMessage(), "");
         }
     }
+
+    /**
+     * | Get Gram panchayat by taluka id
+     */
+    public function getByTaluka(Request $req)
+    {
+        // Validation
+        $validator = Validator::make($req->all(), [
+            'talukaId' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
+        // Logics
+        try {
+            $mGramPanchayat = $this->_modelObj;
+            $taluka = $mGramPanchayat->getByTaluka($req->talukaId);
+            return responseMsg(true, "", remove_null($taluka));
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
+    }
 }
