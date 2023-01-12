@@ -168,7 +168,6 @@ class AuthController extends Controller
     public function changePassword(Request $req)
     {
         $validator = Validator::make($req->all(), [
-            "mobile" => "required|numeric|digits:10",
             "oldPassword" => "required",
             "newPassword" => "required",
         ]);
@@ -179,8 +178,8 @@ class AuthController extends Controller
 
         // Logics
         try {
-            $user = User::where('mobile', $req->mobile)
-                ->first();
+            $userId = auth()->user()->id;
+            $user = User::find($userId);
             if (Hash::check($req->oldPassword, $user->password)) {
                 $user->password = Hash::make($req->newPassword);
                 $user->save();
@@ -188,7 +187,7 @@ class AuthController extends Controller
             }
             return responseMsg(
                 false,
-                "Mobile or Old Password Incorrect",
+                "Old Password is Incorrect",
                 ""
             );
         } catch (Exception $e) {
