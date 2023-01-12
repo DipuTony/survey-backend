@@ -19,6 +19,7 @@ class AuthController extends Controller
             "name" => "required",
             "email" => "required|unique:users,email",
             "mobile" => "required|unique:users,mobile|numeric|digits:10",
+            "gramPanchayatId" => "required|integer",
             "password" => "required"
         ]);
 
@@ -31,6 +32,7 @@ class AuthController extends Controller
             $user->email = $req->email;
             $user->mobile = $req->mobile;
             $user->password = Hash::make($req->password);
+            $user->gram_panchayat_id = $req->gramPanchayatId;
             $user->save();
             return responseMsg(true, "User Successfully Registered", "");
         } catch (Exception $e) {
