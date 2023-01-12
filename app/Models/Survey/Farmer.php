@@ -20,7 +20,7 @@ class Farmer extends Model
             'name_of_head' => $req->nameOfHead,
             'age' => $req->age,
             'marital_status' => $req->maritalStatus,
-            'no_of_dependencies' => $req->noOfDependencies,
+            'no_of_dependencies' => $req->noOfDependencies
         ];
     }
 

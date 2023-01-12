@@ -21,7 +21,7 @@ class SurveyController extends Controller
             $farmer = new Farmer();
             $farmerRelation = new FarmerRelation();
             $surveyFarmer = new SurveyFarmer();
-
+            $villageId = $req->villageId;
             $farmerGetId = $farmer->store($req);
             // Add Farmer Relation
             collect($req->relations)->map(function ($relation) use ($farmerGetId, $farmerRelation) {
@@ -30,15 +30,33 @@ class SurveyController extends Controller
             });
 
             // Add Survey Record
-            collect($req->questions)->map(function ($question) use ($farmerGetId, $surveyFarmer) {
+            collect($req->questions)->map(function ($question) use ($farmerGetId, $surveyFarmer, $villageId) {
                 $question = new Request($question);
-                $surveyFarmer->store($farmerGetId, $question);
+                $surveyFarmer->store($farmerGetId, $question, $villageId);
             });
             return responseMsg(
                 true,
                 "Survey Successfully Done",
                 ""
             );
+        } catch (Exception $e) {
+            return responseMsg(
+                false,
+                $e->getMessage(),
+                ""
+            );
+        }
+    }
+
+    /**
+     * | List of Surveys
+     */
+    public function listSurvey()
+    {
+        try {
+            $mSurveyFarmer = new SurveyFarmer();
+            $survey = $mSurveyFarmer->listSurvey();
+            return $survey;
         } catch (Exception $e) {
             return responseMsg(
                 false,

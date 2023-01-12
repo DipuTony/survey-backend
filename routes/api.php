@@ -83,5 +83,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Start Survey 
     Route::controller(SurveyController::class)->group(function () {
         Route::post('survey/v1/store', 'store');    // Add Survey Record
+        Route::post('survey/v1/list-survey', 'listSurvey');   // List of Surveys
     });
 });
