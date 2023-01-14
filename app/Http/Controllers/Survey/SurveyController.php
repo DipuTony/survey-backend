@@ -56,7 +56,7 @@ class SurveyController extends Controller
         try {
             $mSurveyFarmer = new SurveyFarmer();
             $survey = $mSurveyFarmer->listSurvey();
-            return $survey;
+            return responseMsg(true, "", remove_null($survey));
         } catch (Exception $e) {
             return responseMsg(
                 false,
