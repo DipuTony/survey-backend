@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Masters\GramPanchayatMstr;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Exception;
@@ -94,6 +95,7 @@ class AuthController extends Controller
         try {
             if (Auth::attempt(['mobile' => $req->mobile, 'password' => $req->password])) {
                 $user = Auth::user();
+                $mGramPanchayat = new GramPanchayatMstr();
                 if ($user->status == 0) {
                     return responseMsg(
                         true,
@@ -103,11 +105,13 @@ class AuthController extends Controller
                 }
                 $success['token'] = $user->createToken('MyApp')->plainTextToken;
                 $success['name'] = $user->name;
+                $gramPanchayat = $mGramPanchayat->show($user->gram_panchayat_id);
                 return response()->json(
                     [
                         'status' => true,
                         'bearer' => $success['token'],
-                        'isAdmin' => $user->is_admin
+                        'isAdmin' => $user->is_admin,
+                        'panchayat' => $gramPanchayat
                     ]
                 );
             }
