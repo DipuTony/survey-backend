@@ -65,4 +65,20 @@ class SurveyController extends Controller
             );
         }
     }
+
+    /**
+     * | Get Surveys by Employee ID
+     */
+    public function getSurveyByEmployee()
+    {
+        try {
+            $mSurveyFarmer = new SurveyFarmer();
+            $employeeId = auth()->user()->id;
+            $surveys = $mSurveyFarmer->getSurveyByEmpId($employeeId)->values();
+            $surveys = $surveys->collapse();
+            return responseMsg(true, "", remove_null($surveys));
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
+    }
 }

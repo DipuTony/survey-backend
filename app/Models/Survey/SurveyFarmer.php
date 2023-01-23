@@ -40,9 +40,9 @@ class SurveyFarmer extends Model
     }
 
     /**
-     * | Get Survey Farmers
+     * | Meta Listings
      */
-    public function listSurvey()
+    public function metaLists()
     {
         return DB::table('survey_farmers as sf')
             ->select(
@@ -57,7 +57,24 @@ class SurveyFarmer extends Model
             ->join('farmers as f', 'f.id', '=', 'sf.farmer_id')
             ->join('village_mstrs as v', 'v.id', '=', 'sf.village_id')
             ->join('gram_panchayat_mstrs as g', 'g.id', '=', 'v.gram_panchayat_id')
-            ->join('district_mstrs as d', 'd.id', '=', 'g.district_id')
+            ->join('district_mstrs as d', 'd.id', '=', 'g.district_id');
+    }
+    /**
+     * | Get Survey Farmers
+     */
+    public function listSurvey()
+    {
+        return $this->metaLists()
             ->get();
+    }
+
+    /**
+     * | Get Surveys by employee id
+     */
+    public function getSurveyByEmpId($empId)
+    {
+        return $this->metaLists()
+            ->get()
+            ->groupBy('farmer_id');
     }
 }
