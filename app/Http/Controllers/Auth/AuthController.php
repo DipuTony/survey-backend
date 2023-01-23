@@ -111,6 +111,7 @@ class AuthController extends Controller
                         'status' => true,
                         'bearer' => $success['token'],
                         'isAdmin' => $user->is_admin,
+                        'name' => $user->name,
                         'panchayat' => $gramPanchayat
                     ]
                 );
