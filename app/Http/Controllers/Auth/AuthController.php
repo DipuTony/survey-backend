@@ -106,12 +106,12 @@ class AuthController extends Controller
                 $success['token'] = $user->createToken('MyApp')->plainTextToken;
                 $success['name'] = $user->name;
                 $gramPanchayat = $mGramPanchayat->show($user->gram_panchayat_id);
+                $gramPanchayat->name = $user->name;
                 return response()->json(
                     [
                         'status' => true,
                         'bearer' => $success['token'],
                         'isAdmin' => $user->is_admin,
-                        'name' => $user->name,
                         'panchayat' => $gramPanchayat
                     ]
                 );
