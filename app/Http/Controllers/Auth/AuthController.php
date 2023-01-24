@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use stdClass;
 
 class AuthController extends Controller
 {
@@ -106,6 +107,8 @@ class AuthController extends Controller
                 $success['token'] = $user->createToken('MyApp')->plainTextToken;
                 $success['name'] = $user->name;
                 $gramPanchayat = $mGramPanchayat->show($user->gram_panchayat_id);
+                if (!$gramPanchayat)
+                    $gramPanchayat = new stdClass($gramPanchayat);
                 $gramPanchayat->name = $user->name;
                 return response()->json(
                     [
