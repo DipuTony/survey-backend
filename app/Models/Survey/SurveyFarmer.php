@@ -77,4 +77,25 @@ class SurveyFarmer extends Model
             ->get()
             ->groupBy('farmer_id');
     }
+
+    /**
+     * 
+     */
+    public function getSurveyByVillage($villageId)
+    {
+        $query = "SELECT
+                    s.village_id,
+                    s.farmer_id,
+                    f.name_of_head,
+                    v.village_name,
+                    GROUP_CONCAT(s.answer) AS answer,
+                    GROUP_CONCAT(q.question) AS questions
+                    FROM survey_farmers s
+                    JOIN question_mstrs q ON q.id=s.question_id
+                    JOIN farmers f ON f.id=s.farmer_id
+                    JOIN village_mstrs v ON v.id=s.village_id
+                    WHERE s.village_id=$villageId
+                GROUP BY s.farmer_id,s.village_id";
+        return DB::select($query);
+    }
 }

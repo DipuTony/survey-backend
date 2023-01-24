@@ -9,6 +9,7 @@ use App\Models\Survey\FarmerRelation;
 use App\Models\Survey\SurveyFarmer;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SurveyController extends Controller
 {
@@ -77,6 +78,38 @@ class SurveyController extends Controller
             $surveys = $mSurveyFarmer->getSurveyByEmpId($employeeId)->values();
             $surveys = $surveys->collapse();
             return responseMsg(true, "", remove_null($surveys));
+        } catch (Exception $e) {
+            return responseMsg(false, $e->getMessage(), "");
+        }
+    }
+
+    /**
+     * | Get all Surveys by Village
+     */
+    public function getSurveyByVillage(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "villageId" => "required|numeric",
+        ]);
+
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
+
+        try {
+            $villageId = $req->villageId;
+            $mSurveyFarmer = new SurveyFarmer();
+            $surveys = $mSurveyFarmer->getSurveyByVillage($villageId);
+            $explode = collect($surveys)->map(function ($survey) {
+                $survey->answer = explode(',', $survey->answer);
+                $survey->questions = explode(',', $survey->questions);
+                return $survey;
+            });
+            $mergeQueAns = collect($explode)->map(function ($obj) {
+                $obj->summary = collect($obj->questions)->combine($obj->answer);
+                return $obj;
+            });
+            return responseMsg(true, "", $mergeQueAns);
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
         }

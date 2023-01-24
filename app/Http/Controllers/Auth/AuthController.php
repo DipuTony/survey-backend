@@ -108,7 +108,7 @@ class AuthController extends Controller
                 $success['name'] = $user->name;
                 $gramPanchayat = $mGramPanchayat->show($user->gram_panchayat_id);
                 if (!$gramPanchayat)
-                    $gramPanchayat = new stdClass($gramPanchayat);
+                    $gramPanchayat = new stdClass($gramPanchayat);  // For Admin who have no panchayat
                 $gramPanchayat->name = $user->name;
                 return response()->json(
                     [
