@@ -107,7 +107,7 @@ class SurveyController extends Controller
             });
             $mergeQueAns = collect($explode)->map(function ($obj) {
                 $obj->summary = collect($obj->questions)->combine($obj->answer);
-                return $obj;
+                return collect($obj)->only(['name_of_head', 'village_name', 'summary']);
             });
             return responseMsg(true, "", $mergeQueAns);
         } catch (Exception $e) {
