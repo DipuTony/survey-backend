@@ -9,6 +9,7 @@ use App\Models\Survey\FarmerRelation;
 use App\Models\Survey\SurveyFarmer;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class SurveyController extends Controller
@@ -23,7 +24,9 @@ class SurveyController extends Controller
             $farmerRelation = new FarmerRelation();
             $surveyFarmer = new SurveyFarmer();
             $villageId = $req->villageId;
-            $farmerGetId = $farmer->store($req);
+            DB::beginTransaction();
+            $farmerFields = $farmer->store($req);
+            $farmerGetId = $farmerFields->id;
             // Add Farmer Relation
             collect($req->relations)->map(function ($relation) use ($farmerGetId, $farmerRelation) {
                 $relation = new Request($relation);
@@ -35,12 +38,16 @@ class SurveyController extends Controller
                 $question = new Request($question);
                 $surveyFarmer->store($farmerGetId, $question, $villageId);
             });
+            DB::commit();
             return responseMsg(
                 true,
                 "Survey Successfully Done",
-                ""
+                [
+                    "id" => $farmerFields->farmer_id
+                ]
             );
         } catch (Exception $e) {
+            DB::rollBack();
             return responseMsg(
                 false,
                 $e->getMessage(),

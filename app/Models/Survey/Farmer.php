@@ -35,6 +35,7 @@ class Farmer extends Model
                 'created_by' => auth()->user()->id
             ]
         );
-        return Farmer::create($metaReqs)->id;
+        $farmer = Farmer::create($metaReqs);
+        return $farmer;
     }
 }
