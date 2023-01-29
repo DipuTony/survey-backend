@@ -47,6 +47,7 @@ class SurveyFarmer extends Model
         return DB::table('survey_farmers as sf')
             ->select(
                 'sf.*',
+                'f.farmer_id as farmer_code',
                 'f.name_of_head',
                 'f.age',
                 'f.no_of_dependencies',
@@ -74,6 +75,7 @@ class SurveyFarmer extends Model
     public function getSurveyByEmpId($empId)
     {
         return $this->metaLists()
+            ->orderByDesc('id')
             ->get()
             ->groupBy('farmer_id');
     }
@@ -87,6 +89,7 @@ class SurveyFarmer extends Model
                     s.village_id,
                     s.farmer_id,
                     f.name_of_head,
+                    f.farmer_id AS farmer_code,
                     v.village_name,
                     GROUP_CONCAT(s.answer) AS answer,
                     GROUP_CONCAT(q.question) AS questions
