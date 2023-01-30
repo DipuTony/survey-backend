@@ -85,7 +85,7 @@ class SurveyController extends Controller
             $mFarmer = new Farmer();
             $employeeId = auth()->user()->id;
             $surveys = $mFarmer->getSurveyByEmpId($employeeId);
-            return responseMsg(true, "", remove_null($surveys));
+            return responseMsg(true, "", remove_null($surveys->toArray()));
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
         }
