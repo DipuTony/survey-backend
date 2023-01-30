@@ -118,6 +118,7 @@ class SurveyController extends Controller
                 return collect($obj)->only([
                     'name_of_head',
                     'farmer_code',
+                    'employee_name',
                     'village_name',
                     'summary'
                 ]);

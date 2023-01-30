@@ -53,12 +53,14 @@ class SurveyFarmer extends Model
                 'f.no_of_dependencies',
                 'v.village_name',
                 'g.gram_panchayat_name',
-                'd.name as district_name'
+                'd.name as district_name',
+                'u.name as employee_name'
             )
             ->join('farmers as f', 'f.id', '=', 'sf.farmer_id')
             ->join('village_mstrs as v', 'v.id', '=', 'sf.village_id')
             ->join('gram_panchayat_mstrs as g', 'g.id', '=', 'v.gram_panchayat_id')
-            ->join('district_mstrs as d', 'd.id', '=', 'g.district_id');
+            ->join('district_mstrs as d', 'd.id', '=', 'g.district_id')
+            ->join('users as u', 'u.id', '=', 'sf.created_by');
     }
     /**
      * | Get Survey Farmers
@@ -66,6 +68,7 @@ class SurveyFarmer extends Model
     public function listSurvey()
     {
         return $this->metaLists()
+            ->orderByDesc('id')
             ->get();
     }
 
@@ -88,6 +91,7 @@ class SurveyFarmer extends Model
     {
         $query = "SELECT
                     s.village_id,
+                    u.name AS employee_name,
                     s.farmer_id,
                     f.name_of_head,
                     f.farmer_id AS farmer_code,
@@ -98,8 +102,9 @@ class SurveyFarmer extends Model
                     JOIN question_mstrs q ON q.id=s.question_id
                     JOIN farmers f ON f.id=s.farmer_id
                     JOIN village_mstrs v ON v.id=s.village_id
+                    JOIN users u ON u.id=s.created_by
                     WHERE s.village_id=$villageId
-                GROUP BY s.farmer_id,s.village_id";
+                GROUP BY s.farmer_id,s.village_id,u.name";
         return DB::select($query);
     }
 }
