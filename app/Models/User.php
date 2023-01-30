@@ -85,4 +85,13 @@ class User extends Authenticatable
             ->where('u.id', $id)
             ->first();
     }
+
+    /**
+     * Get Total Employees
+     */
+    public function getTotalEmployees()
+    {
+        return User::where('is_admin', 0)
+            ->count();
+    }
 }

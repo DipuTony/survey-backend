@@ -96,4 +96,12 @@ class VillageMstr extends Model
         return VillageMstr::where('gram_panchayat_id', $panchayatId)
             ->get();
     }
+
+    /**
+     * | Get Total Villages
+     */
+    public function getTotalVillages()
+    {
+        return VillageMstr::count();
+    }
 }

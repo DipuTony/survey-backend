@@ -2,6 +2,7 @@
 
 namespace App\Models\Survey;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -62,5 +63,23 @@ class Farmer extends Model
             ->where('created_by', $empId)
             ->orderByDesc('id')
             ->get();
+    }
+
+    /**
+     * | Get Total Farmers or Surveys
+     */
+    public function getTotalSurveys()
+    {
+        return Farmer::count();
+    }
+
+    /**
+     * | Today Survey List
+     */
+    public function getTodaySurveysList()
+    {
+        $today = Carbon::now()->format('Y-m-d');
+        return Farmer::whereDate('created_at', $today)
+            ->count();
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Masters\DashboardController;
 use App\Http\Controllers\Masters\DistrictController;
 use App\Http\Controllers\Masters\GramPanchayatController;
 use App\Http\Controllers\Masters\QuestionController;
@@ -59,6 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Village Masters
     Route::controller(VillageController::class)->group(function () {
+        Route::post('masters/village/v1/store', 'store');  // Add New Village
+        Route::post('masters/village/v1/edit', 'edit');      // Edit Village
         Route::post('masters/village/v1/show', 'show');             // show Village
         Route::post('masters/village/v1/retrieve', 'retrieve');     // Retrieve Village
         Route::post('masters/village/v1/get-by-panchayat', 'getByPanchayat');    // Get Village by Panchayat id
@@ -83,12 +86,6 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('masters/panchayat/v1/store', 'store');  // Add new Panchayat
             Route::post('masters/panchayat/v1/edit', 'edit');  // Add new Panchayat
         });
-
-        // Village Masters
-        Route::controller(VillageController::class)->group(function () {
-            Route::post('masters/village/v1/store', 'store');  // Add New Village
-            Route::post('masters/village/v1/edit', 'edit');      // Edit Village
-        });
     });
 
     // Questions
@@ -103,5 +100,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('survey/v1/get-survey-by-employee', 'getSurveyByEmployee');  // Get Survey By Employee ID
         Route::post('survey/v1/get-survey-by-village', 'getSurveyByVillage');   // Get all the surveys by village
         Route::post('survey/v1/export-to-excel', 'exportToExcel');               // Export to Excel
+    });
+
+    // Get Dashboard Data
+    Route::controller(DashboardController::class)->group(function () {
+        Route::post('dashboard/v1/dashboard-data', 'dashboardData');
     });
 });
