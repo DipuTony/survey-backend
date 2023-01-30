@@ -4,6 +4,7 @@ namespace App\Models\Survey;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Farmer extends Model
 {
@@ -37,5 +38,29 @@ class Farmer extends Model
         );
         $farmer = Farmer::create($metaReqs);
         return $farmer;
+    }
+
+    /**
+     * | Get Surveys by employee id
+     */
+    public function getSurveyByEmpId($empId)
+    {
+        return DB::table('farmers as f')
+            ->select(
+                'f.*',
+                'f.farmer_id as farmer_code',
+                'f.name_of_head',
+                'f.age',
+                'f.no_of_dependencies',
+                'v.village_name',
+                'g.gram_panchayat_name',
+                'd.name as district_name'
+            )
+            ->join('village_mstrs as v', 'v.id', '=', 'f.village_id')
+            ->join('gram_panchayat_mstrs as g', 'g.id', '=', 'v.gram_panchayat_id')
+            ->join('district_mstrs as d', 'd.id', '=', 'g.district_id')
+            ->where('created_by', $empId)
+            ->orderByDesc('id')
+            ->get();
     }
 }

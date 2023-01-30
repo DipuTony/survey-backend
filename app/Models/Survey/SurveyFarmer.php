@@ -75,6 +75,7 @@ class SurveyFarmer extends Model
     public function getSurveyByEmpId($empId)
     {
         return $this->metaLists()
+            ->where('sf.created_by', $empId)
             ->orderByDesc('id')
             ->get()
             ->groupBy('farmer_id');

@@ -102,5 +102,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('survey/v1/list-survey', 'listSurvey');   // List of Surveys
         Route::post('survey/v1/get-survey-by-employee', 'getSurveyByEmployee');  // Get Survey By Employee ID
         Route::post('survey/v1/get-survey-by-village', 'getSurveyByVillage');   // Get all the surveys by village
+        Route::post('survey/v1/export-to-excel', 'exportToExcel');               // Export to Excel
     });
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Survey;
 
+use App\Exports\ExportSurvey;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveyRequest;
 use App\Models\Survey\Farmer;
@@ -11,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SurveyController extends Controller
 {
@@ -64,7 +66,7 @@ class SurveyController extends Controller
         try {
             $mSurveyFarmer = new SurveyFarmer();
             $survey = $mSurveyFarmer->listSurvey();
-            return responseMsg(true, "", remove_null($survey));
+            return responseMsg(true, "", remove_null($survey->toArray()));
         } catch (Exception $e) {
             return responseMsg(
                 false,
@@ -80,10 +82,9 @@ class SurveyController extends Controller
     public function getSurveyByEmployee()
     {
         try {
-            $mSurveyFarmer = new SurveyFarmer();
+            $mFarmer = new Farmer();
             $employeeId = auth()->user()->id;
-            $surveys = $mSurveyFarmer->getSurveyByEmpId($employeeId)->values();
-            $surveys = $surveys->collapse();
+            $surveys = $mFarmer->getSurveyByEmpId($employeeId);
             return responseMsg(true, "", remove_null($surveys));
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
@@ -125,5 +126,13 @@ class SurveyController extends Controller
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
         }
+    }
+
+    /**
+     * | Export to Excel
+     */
+    public function exportToExcel()
+    {
+        return Excel::download(new ExportSurvey, 'survey.xlsx');
     }
 }
