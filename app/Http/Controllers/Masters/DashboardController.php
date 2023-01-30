@@ -19,14 +19,17 @@ class DashboardController extends Controller
             $mUsers = new User();
             $mVillages = new VillageMstr();
             $data = array();
+
             $totalSurveys = $mFarmers->getTotalSurveys();
             $todaySurveys = $mFarmers->getTodaySurveysList();
             $noOfEmployees = $mUsers->getTotalEmployees();
             $totalVillages = $mVillages->getTotalVillages();
+
             $data['totalSurveys'] = collect($totalSurveys)->first();
             $data['todaySurveys'] = $todaySurveys;
             $data['totalEmployees'] =  $noOfEmployees;
             $data['totalVillages'] =  $totalVillages;
+
             return responseMsg(true, "Dashboard List Data", $data);
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
