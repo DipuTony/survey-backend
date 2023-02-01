@@ -11,6 +11,13 @@ class QuestionMstr extends Model
 
     public function getAllQuestions()
     {
-        return QuestionMstr::all();
+        return QuestionMstr::select('id', 'question')
+            ->get();
+    }
+
+    public function getHindiQuestions()
+    {
+        return QuestionMstr::select('id', 'question_hindi')
+            ->get();
     }
 }

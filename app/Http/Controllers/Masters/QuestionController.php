@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Masters\QuestionMstr;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class QuestionController extends Controller
 {
@@ -19,11 +20,20 @@ class QuestionController extends Controller
     /**
      * | Get All Questions
      */
-    public function getAllQuestions()
+    public function getAllQuestions(Request $req)
     {
+        $validator = Validator::make($req->all(), [
+            'language' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return responseMsg(false, $validator->errors(), "");
+        }
         try {
             $question = $this->_modelObj;
-            $questions = $question->getAllQuestions();
+            if ($req->language == 'English')
+                $questions = $question->getAllQuestions();
+            if ($req->language == 'Hindi')
+                $questions = $question->getHindiQuestions();
             return responseMsg(true, "", remove_null($questions->toArray()));
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
