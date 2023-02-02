@@ -32,8 +32,10 @@ class QuestionController extends Controller
             $question = $this->_modelObj;
             if ($req->language == 'English')
                 $questions = $question->getAllQuestions();
-            if ($req->language == 'Hindi')
+            elseif ($req->language == 'Hindi')
                 $questions = $question->getHindiQuestions();
+            else
+                throw new Exception("Language Not Available");
             return responseMsg(true, "", remove_null($questions->toArray()));
         } catch (Exception $e) {
             return responseMsg(false, $e->getMessage(), "");
