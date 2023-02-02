@@ -17,7 +17,7 @@ class QuestionMstr extends Model
 
     public function getHindiQuestions()
     {
-        return QuestionMstr::select('id', 'question_hindi')
+        return QuestionMstr::select('id', 'question_hindi as question')
             ->get();
     }
 }

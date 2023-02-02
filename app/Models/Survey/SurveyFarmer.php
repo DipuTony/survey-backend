@@ -51,6 +51,8 @@ class SurveyFarmer extends Model
                 'f.name_of_head',
                 'f.age',
                 'f.no_of_dependencies',
+                'f.longitude',
+                'f.latitude',
                 'v.village_name',
                 'g.gram_panchayat_name',
                 'd.name as district_name',
@@ -95,6 +97,8 @@ class SurveyFarmer extends Model
                     s.farmer_id,
                     f.name_of_head,
                     f.farmer_id AS farmer_code,
+                    f.longitude,
+                    f.latitude,
                     v.village_name,
                     GROUP_CONCAT(s.answer) AS answer,
                     GROUP_CONCAT(q.question) AS questions

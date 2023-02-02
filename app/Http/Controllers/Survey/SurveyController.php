@@ -120,6 +120,8 @@ class SurveyController extends Controller
                     'farmer_code',
                     'employee_name',
                     'village_name',
+                    'longitude',
+                    'latitude',
                     'summary'
                 ]);
             });
