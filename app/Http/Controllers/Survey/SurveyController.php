@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Survey;
 
-use App\Exports\ExportSurvey;
+use App\Exports\SurveyExport;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SurveyRequest;
 use App\Models\Survey\Farmer;
@@ -136,6 +136,6 @@ class SurveyController extends Controller
      */
     public function exportToExcel()
     {
-        return Excel::download(new ExportSurvey, 'survey.xlsx');
+        return Excel::download(new SurveyExport, 'survey.xlsx');
     }
 }
