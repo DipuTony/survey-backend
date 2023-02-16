@@ -26,6 +26,10 @@ class SurveyController extends Controller
             $farmerRelation = new FarmerRelation();
             $surveyFarmer = new SurveyFarmer();
             $villageId = $req->villageId;
+
+            $noOfSurveys = $farmer->getTotalSurveys();
+            if ($noOfSurveys > 300)
+                throw new Exception("Survey Limit Crossed");
             DB::beginTransaction();
             $farmerFields = $farmer->store($req);
             $farmerGetId = $farmerFields->id;
