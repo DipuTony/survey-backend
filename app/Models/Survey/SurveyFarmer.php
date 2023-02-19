@@ -69,7 +69,19 @@ class SurveyFarmer extends Model
      */
     public function listSurvey()
     {
-        return $this->metaLists()
+        return DB::table('farmers as f')
+            ->select(
+                'f.*',
+                'f.farmer_id as farmer_code',
+                'v.village_name',
+                'd.name as district_name',
+                'g.gram_panchayat_name',
+                'u.name as employee_name',
+            )
+            ->join('village_mstrs as v', 'v.id', '=', 'f.village_id')
+            ->join('gram_panchayat_mstrs as g', 'g.id', '=', 'v.gram_panchayat_id')
+            ->join('district_mstrs as d', 'd.id', '=', 'g.district_id')
+            ->join('users as u', 'u.id', '=', 'f.created_by')
             ->orderByDesc('id')
             ->get();
     }
