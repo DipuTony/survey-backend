@@ -25,20 +25,27 @@ class SurveyRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $validation = [
             'villageId' => 'required|integer',
             'nameOfHead' => 'required',
             'age' => 'required|integer',
             'maritalStatus' => 'required|bool',
             'noOfDependencies' => 'required|integer',
-            'relations' => 'required|array',
-            'relations.*.name' => 'required',
-            'relations.*.age' => 'required|integer',
-            'relations.*.relation' => 'required',
+
             'questions' => 'required|array',
             'questions.*.questionId' => 'required|integer',
             'questions.*.answer' => 'required',
         ];
+        if ($this->noOfDependencies > 0) {
+            $validation = array_merge($validation, [
+                'relations' => 'required|array',
+                'relations.*.name' => 'required',
+                'relations.*.age' => 'required|integer',
+                'relations.*.relation' => 'required',
+            ]);
+        }
+
+        return $validation;
     }
 
     /**
